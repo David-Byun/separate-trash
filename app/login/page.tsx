@@ -12,7 +12,7 @@ export default function Login() {
       <form className="flex flex-col gap-3">
         <Input type="email" placeholder="이메일" name="email" />
         <Input type="password" placeholder="패스워드" name="password" />
-        <Button text="login" />
+        <Button text="로그인" />
       </form>
       <SocialLogin />
     </div>
