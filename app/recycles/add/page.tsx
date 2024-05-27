@@ -5,7 +5,7 @@ export default function AddRecycles() {
   return (
     <div>
       <form>
-        <Input required placeholder="제목" type="text" />
+        <Input required placeholder="제목" type="text" name="title" />
         <Button text="작성 완료" />
       </form>
     </div>
