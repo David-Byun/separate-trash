@@ -1,7 +1,7 @@
 import Button from '@/app/button';
 import Input from '@/app/input';
 
-export default function AddRecycles() {
+export default function AddPost() {
   return (
     <div>
       <form>
