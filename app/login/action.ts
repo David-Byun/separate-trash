@@ -3,8 +3,9 @@
 import { z } from 'zod';
 import db from '../db';
 import bcrypt from 'bcrypt';
-import getSession from '../session';
+
 import { redirect } from 'next/navigation';
+import getSession from '../session';
 
 const checkEmailExists = (email: string) => {
   const user = db.user.findUnique({

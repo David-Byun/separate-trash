@@ -1,12 +1,11 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Posts({ params }: { params: { id: string } }) {
+export default async function Posts({ params }: { params: { id: string } }) {
+  console.log(params.id);
   return (
     <>
-      <Link href={`/recycles/${params.id}`} className="flex gap-5 p-5">
+      <Link href={`/recycles/1`} className="flex gap-5 p-5">
         <div className="rounded-md relative overflow-hidden">
           <Image
             src="https://m.segye.com/content/image/2023/06/19/20230619520118.jpg"
@@ -24,7 +23,7 @@ export default function Posts({ params }: { params: { id: string } }) {
         </div>
       </Link>
 
-      <Link href={`/recycles/${params.id}`} className="flex gap-5 p-5">
+      <Link href={`/recycles/1`} className="flex gap-5 p-5">
         <div className="rounded-md relative overflow-hidden">
           <Image
             src="https://m.segye.com/content/image/2023/06/19/20230619520118.jpg"

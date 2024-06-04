@@ -5,8 +5,11 @@ import Input from '@/app/input';
 import { PhotoIcon } from '@heroicons/react/16/solid';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
+import { uploadRecycle } from './actions';
 
-// use client 사용하므로, react hook form으로 파라미터 넘겨줌
+/*
+     use client 사용하므로, react hook form으로 파라미터 넘겨줌 
+*/
 
 export default function AddRecycle() {
   const [preview, setPreview] = useState('');
@@ -26,7 +29,7 @@ export default function AddRecycle() {
 
   const [state, dispatch] = useFormState(uploadRecycle, null);
   return (
-    <div>
+    <div className="p-3">
       <form className="flex flex-col gap-3" action={dispatch}>
         <label
           htmlFor="photo"
@@ -52,9 +55,27 @@ export default function AddRecycle() {
           className="hidden"
           onChange={onImageChange}
         />
-        <Input required name="title" placeholder="제목" type="text" />
-        <Input required name="description" placeholder="설명" type="text" />
-        <Input required name="price" placeholder="가격" type="text" />
+        <Input
+          required
+          name="title"
+          placeholder="제목"
+          type="text"
+          errors={state?.fieldErrors.title}
+        />
+        <Input
+          required
+          name="price"
+          placeholder="가격"
+          type="text"
+          errors={state?.fieldErrors.price}
+        />
+        <Input
+          required
+          name="description"
+          placeholder="설명"
+          type="text"
+          errors={state?.fieldErrors.description}
+        />
         <Button text="작성완료" />
       </form>
     </div>

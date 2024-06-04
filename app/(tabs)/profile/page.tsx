@@ -1,8 +1,11 @@
 import { notFound, redirect } from 'next/navigation';
-import getSession from '../session';
-import db from '../db';
+
 import { Suspense } from 'react';
 import Image from 'next/image';
+import getSession from '@/app/session';
+import db from '@/app/db';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import { UserIcon } from '@heroicons/react/16/solid';
 
 async function getUser() {
   const session = await getSession();
@@ -19,12 +22,9 @@ async function getUser() {
   notFound();
 }
 
-async function Username() {
+export default async function Profile() {
   const user = await getUser();
-  return <h1>환영해요! {user.username} !</h1>;
-}
-
-export default function Profile() {
+  console.log(user);
   const logOut = async () => {
     'use server';
     const session = await getSession();
@@ -34,22 +34,25 @@ export default function Profile() {
   return (
     <div className="p-3">
       <div className="relative aspect-square ">
-        <Image
-          src="https://m.segye.com/content/image/2023/06/19/20230619520118.jpg"
-          fill
-          alt="recycles"
-          className="object-cover rounded-full"
-        />
+        {user.avatar ? (
+          <Image
+            src={user.avatar}
+            fill
+            alt={user.username}
+            className="object-cover rounded-full"
+          />
+        ) : (
+          <UserIcon />
+        )}
       </div>
       <div className="p-3">
-        <h1 className="text-2xl font-semibold">분리수거</h1>
-        <p>위치등의 정보</p>
-      </div>
-      <div>지도영역</div>
-      <div className="w-full p-5 bottom-0 fixed left-0 pb-10 bg-neutral-800 flex justify-between items-center">
-        <span>가격 : 7,000원</span>
+        <h1 className="text-2xl font-semibold">{user.username}</h1>
+        <p>{user.email}</p>
         <form action={logOut}>
           <button className="font-semibold text-xl">로그아웃</button>
+        </form>
+        <form>
+          <button className="font-semibold text-xl">프로필 수정</button>
         </form>
       </div>
     </div>

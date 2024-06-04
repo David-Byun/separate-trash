@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  username   String    @unique
-  email      String?   @unique
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String?    @unique
   password   String?
-  phone      String?   @unique
+  phone      String?    @unique
   avatar     String?
-  github_id  String?   @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  github_id  String?    @unique
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
   posts      Post[]
   Recycle    Recycle[]
+  SMSToken   SMSToken[]
 }
 
 model Post {
@@ -38,9 +39,18 @@ model Recycle {
   price       Float
   description String
   photo       String
-  address     String
+  address     String?
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model SMSToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
 }
