@@ -18,10 +18,11 @@ model User {
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   posts      Post[]
-  Recycle    Recycle[]
-  SMSToken   SMSToken[]
-  ChatRoom   ChatRoom[]
-  Message    Message[]
+  recycles   Recycle[]
+  tokens     SMSToken[]
+  chat_rooms ChatRoom[]
+  messages   Message[]
+  likes      Like[]
 }
 
 model Post {
@@ -35,17 +36,31 @@ model Post {
   user        User     @relation(fields: [userId], references: [id])
 }
 
+model Like {
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recycle    Recycle  @relation(fields: [recycleId], references: [id], onDelete: Cascade)
+  recycleId  Int
+  userId     Int
+
+  //userId, postId로 unique 한 값 : composite Id
+  @@id(name: "id", [userId, recycleId])
+}
+
 model Recycle {
   id          Int      @id @default(autoincrement())
   title       String
   price       Float
   description String
+  views       Int      @default(0)
   photo       String
   address     String?
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes       Like[]
 }
 
 model SMSToken {
@@ -54,7 +69,7 @@ model SMSToken {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   userId     Int
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ChatRoom {

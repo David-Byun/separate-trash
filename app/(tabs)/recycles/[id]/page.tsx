@@ -1,3 +1,4 @@
+import LikeButton from '@/app/components/like-button';
 import db from '@/app/db';
 import getSession from '@/app/session';
 import { UserIcon } from '@heroicons/react/16/solid';
@@ -10,6 +11,32 @@ async function getIsOwner(userId: number) {
     return session.id === userId;
   }
   return false;
+}
+
+function getCachedLikeStatus(recycleId: number) {
+  const cachedOperation = nextCache;
+}
+
+async function getLikeStatus(recycleId: number) {
+  const session = await getSession();
+  const isLiked = await db.like.findUnique({
+    where: {
+      id: {
+        recycleId: recycleId,
+        userId: session.id!,
+      },
+    },
+  });
+
+  const likeCount = await db.like.count({
+    where: {
+      recycleId,
+    },
+  });
+  return {
+    likeCount,
+    isLiked: Boolean(isLiked),
+  };
 }
 
 export default async function RecyclesDetail({
@@ -41,6 +68,7 @@ export default async function RecyclesDetail({
   }
   console.log(recycle);
   const isOwner = await getIsOwner(recycle.userId);
+  const { likeCount, isLiked } = await getLikeStatus(id);
   //server action 파일을 만들 때 마다 모든 server action을 별도의 파일에 옮겨 두는게 좋음
   const createChatRoom = async () => {
     'use server';
@@ -58,6 +86,7 @@ export default async function RecyclesDetail({
     });
     redirect(`/chats/${room.id}`);
   };
+
   return (
     <div className="p-3">
       <div className="relative aspect-square">
@@ -91,6 +120,10 @@ export default async function RecyclesDetail({
         <p>위치등의 정보</p>
       </div>
       <div>지도영역</div>
+      <div>
+        <LikeButton isLiked={isLiked} likeCount={likeCount} recycleId={id} />
+        <span>조회 {recycle.views}</span>
+      </div>
       <div className="w-full p-5 bottom-14 fixed left-0 pb-10 bg-neutral-800 flex justify-between items-center">
         <span className="font-semibold text-xl">가격 : {recycle!.price}원</span>
         <form action={createChatRoom}>
