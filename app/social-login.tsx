@@ -13,7 +13,7 @@ export default function SocialLogin() {
           className="primary-btn flex h-10 items-center justify-center gap-3"
         >
           <MagnifyingGlassIcon className="size-6" />
-          <span>깃헙 로그인</span>
+          <span>네이버 로그인</span>
         </Link>
         <Link
           href="/sms"

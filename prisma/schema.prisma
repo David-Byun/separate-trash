@@ -20,6 +20,8 @@ model User {
   posts      Post[]
   Recycle    Recycle[]
   SMSToken   SMSToken[]
+  ChatRoom   ChatRoom[]
+  Message    Message[]
 }
 
 model Post {
@@ -53,4 +55,23 @@ model SMSToken {
   updated_at DateTime @updatedAt
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
+}
+
+model ChatRoom {
+  id         String    @id @default(cuid())
+  created_at DateTime  @default(now())
+  updated_At DateTime  @updatedAt
+  users      User[]
+  messages   Message[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  payload    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  room       ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId String
+  userId     Int
 }
