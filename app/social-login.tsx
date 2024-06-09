@@ -8,13 +8,14 @@ export default function SocialLogin() {
   return (
     <div className="w-full h-px bg-neutral-500">
       <div className="flex flex-col gap-3">
-        <Link
-          href="/github/start"
-          className="primary-btn flex h-10 items-center justify-center gap-3"
-        >
-          <MagnifyingGlassIcon className="size-6" />
-          <span>네이버 로그인</span>
-        </Link>
+        <div className="primary-btn flex h-10 items-center justify-center gap-3">
+          <Link
+            href="/naver/start"
+            className='className="primary-btn h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed'
+          >
+            네이버로그인
+          </Link>
+        </div>
         <Link
           href="/sms"
           className="primary-btn flex h-10 items-center justify-center gap-3"

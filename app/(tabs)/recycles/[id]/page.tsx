@@ -4,6 +4,7 @@ import getSession from '@/app/session';
 import { UserIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
+import { unstable_cache } from 'next/cache';
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -14,8 +15,19 @@ async function getIsOwner(userId: number) {
 }
 
 function getCachedLikeStatus(recycleId: number) {
-  const cachedOperation = nextCache;
+  const cachedOperation = unstable_cache(
+    getLikeStatus,
+    ['recycle-like-status'],
+    {
+      tags: [`like-status-${recycleId}`],
+    }
+  );
 }
+
+const getCachedRecycle = unstable_cache(getRecycle, ['recycle-detail'], {
+  tags: ['post-detail'],
+  revalidate: 60,
+});
 
 async function getLikeStatus(recycleId: number) {
   const session = await getSession();
@@ -39,6 +51,36 @@ async function getLikeStatus(recycleId: number) {
   };
 }
 
+async function getRecycle(id: number) {
+  /*
+    db.recycle.update : database 안의 record를 수정하고 나서 수정된 record를 return 해줌
+    한가지 주의해야 할 점 : update method는 업데이트할 post를 찾지 못하면 에러 발생시킴
+    그래서 try catch 구문 사용
+  */
+  try {
+    const recycle = await db.recycle.update({
+      where: {
+        id,
+      },
+      data: {
+        // 현재 views 값을 모르더라도 더하기, 나누기, 빼기, 곱하기등을 할 수 있음
+        views: {
+          increment: 1,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+    return recycle;
+  } catch (e) {}
+}
+
 export default async function RecyclesDetail({
   params,
 }: {
@@ -50,19 +92,7 @@ export default async function RecyclesDetail({
   if (isNaN(id)) {
     return notFound();
   }
-  const recycle = await db.recycle.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
-          avatar: true,
-        },
-      },
-    },
-  });
+  const recycle = await getCachedRecycle(id);
   if (!recycle) {
     return notFound();
   }
